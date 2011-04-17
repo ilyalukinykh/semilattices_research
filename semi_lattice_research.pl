@@ -60,25 +60,34 @@ idempotence([H | Tail], Eq) :-
 	H =:= Y,
 	idempotence(Tail, Eq). 
 
-/****************************************
- * (x<=y, alpha(y)=y) => alpha(x)=x
- ****************************************/
-alpha_condition(Eq, Points, RelationList) :-
-	forall((member(X, Points),
-	member(Y, Points),
-	less(Y, X, RelationList),
-	alpha(Eq, Y, Y)),
-	alpha(Eq, X, X)).
+%% alpha_condition( +Eq, +Elements, +RelationList )
+%
+% Check alpha setted as Eq for
+% (x<=y, alpha(y)=y) => alpha(x)=x
 
-transitive(PhiList, E, RelationList) :-
-	length(E,Length),
-	forall((member(X,E),
-		lessList(X,Cones,RelationList),
-		member(Cone,Cones),
-		length(Alpha,Length),
-		nth1(X,Alpha,Cone)),
-		member(Alpha,PhiList)
+alpha_condition( Eq, Elements, RelationList ) :-
+	forall( ( member( X, Elements )
+            , member( Y, Elements )
+            , less( Y, X, RelationList )
+            , alpha(Eq, Y, Y)
+            )
+          , alpha( Eq, X, X ) ).
+
+%% transitive( +PhiList, +Elements, +RelationList )
+%
+% Check transitivity of PhiList
+
+transitive( PhiList, Elements, RelationList ) :-
+	length( Elements, Length ),
+	forall( ( member( X, Elements )
+            , lessList( X, Cones, RelationList )
+            , member( Cone, Cones )
+            , length( Alpha, Length )
+            , nth1( X, Alpha, Cone )
+            )
+          , member( Alpha, PhiList )
 	).
+
 /**********************************/
 
 list_mltpl(List1, List2, List) :-
@@ -105,42 +114,64 @@ have_inf(X1, X2, RelationList) :-
 	list_mltpl(X1_cone, X2_cone, Cone),
 	poset_with_maximum(RelationList, Cone),
 	!.
-	
-active_elements(List, E) :-
-	flatten(List, FlatList),
-	sort(FlatList, SortList),
-	SortList = E.
 
-relations(List, E) :-
-	findall([X1,X2],
-		(member(X1, E),
-		member(X2, E),
-		X1 < X2),
-	Relations),
-	sublist(List, Relations),
-	active_elements(List, E).
+%% active_elements( +List, +Elements )
+% 
+% Check that in relationList List all elements of Elements
+% is active.
 
-connected(X, Y, RelationList) :-
-	(member([X,Y], RelationList);
-	member([Y,X], RelationList)).
+active_elements( List, Elements ) :-
+	flatten( List, FlatList ),
+	sort( FlatList, Elements ).
 
-path(X, Y, RelationList, Path) :-
-	travel(X, Y, RelationList, [X], ReversePath),
-	reverse(ReversePath, Path),!.
 
-travel(X, Y, RelationList, Point, [Y | Point]) :-
-	connected(X, Y, RelationList).
-travel(X, Y, RelationList, Visited, Path) :-
-	connected(X, Z, RelationList),
+%% relations( -List, +E )  
+% 
+% Generate poset graph List, containing list of relations
+% Elements are list of elements ([1,2,3] i.e.)
+
+relations( List, Elements ) :-
+	findall( [X1,X2]
+           , ( member(X1, Elements)
+             , member(X2, Elements)
+		     , X1 < X2
+             )
+           , Relations
+           ),
+	sublist( List, Relations ),
+	active_elements( List, Elements ).
+
+
+
+connected( X, Y, RelationList ) :-
+    member( [X,Y], RelationList )
+    ;
+	member( [Y,X], RelationList ).
+
+path( X, Y, RelationList, Path ) :-
+	travel( X, Y, RelationList, [X], ReversePath ),
+	reverse( ReversePath, Path ),
+    !.
+
+travel( X, Y, RelationList, Point, [Y | Point] ) :-
+	connected( X, Y, RelationList ).
+travel( X, Y, RelationList, Visited, Path ) :-
+	connected( X, Z, RelationList ),
 	Z =\= Y,
-	\+member(Z, Visited),
-	travel(Z, Y, RelationList, [Z|Visited], Path).
+	\+member( Z, Visited ),
+	travel( Z, Y, RelationList, [Z|Visited], Path ).
 
-connective_graph(RelationList, E) :-
-	forall((member(X, E),
-		member(Y, E),
-		X < Y)
-	,path(X,Y,RelationList,_)).
+%% connective_graph( +RelationList, +Elements )
+%
+% Check graph setted as RelationList for connectivity
+
+connective_graph( RelationList, Elements ) :-
+	forall( ( member( X, Elements )
+            , member( Y, Elements )
+            , X < Y
+            )
+	      , path( X,Y,RelationList,_ )
+          ).
 
 semilattice(RelationList, E) :-
 	forall(
@@ -150,51 +181,43 @@ semilattice(RelationList, E) :-
 		X1 < X2),
 	have_inf(X1, X2, RelationList)).
 
-/*
-all_semilattice(List, E) :-
-	relations(List, E),
-	semilattice(List, E).
-*/
+%% phi_for_List( +RelationList, +E, -PhiList )
+%
+% Generate PhiList list of alpha convertions
 
-phi_for_List(RelationList, E, PhiList) :-
-	findall(Eq,
-	(
-		get_set(Eq, E, RelationList),
-		idempotence(Eq),
-		alpha_isotone(Eq, E, RelationList),
-		alpha_condition(Eq, E, RelationList)
-	), PhiList).
+phi_for_List( RelationList, E, PhiList ) :-
+	findall( Eq
+           , ( get_set( Eq, E, RelationList )
+             , idempotence( Eq )
+             , alpha_isotone( Eq, E, RelationList )
+             , alpha_condition(Eq, E, RelationList)
+	         )
+           , PhiList
+           ).
 
+%% poset_with_semilattices( +RelationList, +E )
+% 
+% Check that lower cone of every element of poset RelationList 
+% is semilattice
 
-/*
-all_condition_phi(RelationList, E) :-
-	phi_for_List(RelationList, E, []).
-
-main(E) :-
-	all_semilattice(List, E),
-	all_condition_phi(List, E).
-*/
-
-/*************************
-           NEW
- *************************/
-poset_with_semilattices(RelationList, E) :-
-	forall(
-	member(Element, E),(
-	lessList(Element, LessList, RelationList),
-	findall([X,Y], (
-		member([X,Y], RelationList),
-		member(X, LessList),
-		member(Y, LessList)
-		), LIST),
-	sort(LIST, SORTLIST),
-	(
-	semilattice(SORTLIST, LessList)
-	;
-	(
-	length(SORTLIST, Len),
-	Len =:= 1
-	)))).
+poset_with_semilattices( RelationList, E ) :-
+	forall( member( Element, E )
+          , ( lessList( Element, LessList, RelationList )
+            , findall( [X,Y]
+                     , ( member( [X,Y], RelationList )
+                       , member( X, LessList )
+                       , member( Y, LessList )
+                       )
+                     , LIST
+                     )
+            , sort( LIST, SORTLIST )
+            , ( semilattice( SORTLIST, LessList )
+              ; ( length( SORTLIST, Len )
+                , Len =:= 1
+                )
+              )
+            )
+          ).
 
 number_of_N_sets(N, Number) :-
 	numlist(1, N, E),
@@ -205,39 +228,34 @@ number_of_N_sets(N, Number) :-
 	), AllSets),
 	length(AllSets, Number).
 
-main(N) :-
-	numlist(1, N, E),
-	open('log_semi_lattice_phi.txt',write,OS),
-	(
-	relations(List, E),
-	\+member([1,2],List),
-	connective_graph(List, E),
-	poset_with_semilattices(List, E),
-	phi_for_List(List, E, PhiList),
-	((
-		transitive(PhiList, E, List),
-		write(OS,('Poset= ')),
-		write(OS, List),
-		nl(OS),
-		write(OS,('Phi= ')),
-		write(OS,PhiList),
-		nl(OS),
-		write(OS,'PHI is transitive => FAILED'),
-		nl(OS),nl(OS)
-	)
-	;
-	(
-		\+transitive(PhiList, E, List),
-		write(OS,('Poset= ')),
-		write(OS, List),
-		nl(OS),
-		write(OS,('Phi= ')),
-		write(OS,PhiList),
-		nl(OS),
-		write(OS,'PHI is nontransitive => PASSED'),
-		nl(OS),nl(OS)
-	)),
-	fail
-	;
-	close(OS)
-	).
+main( N ) :-
+    numlist( 1, N, E ),
+    open( 'log_semi_lattice_phi.txt', write, OS),
+    ( relations( List, E )
+    , connective_graph( List, E )
+    , poset_with_semilattices( List, E )
+    , phi_for_List( List, E, PhiList )
+    , ( ( transitive( PhiList, E, List )
+        , write( OS, ('Poset= ') )
+        , write( OS, List )
+        , nl( OS )
+        , write( OS, ('Phi= ') )
+        , write( OS, PhiList )
+        , nl( OS )
+        , write( OS, 'PHI is transitive => FAILED' )
+        , nl( OS ), nl( OS )
+	    )
+	  ; ( \+transitive( PhiList, E, List )
+        , write( OS, ('Poset= ') )
+        , write( OS, List )
+        , nl( OS )
+        , write( OS, ('Phi= ') )
+        , write( OS, PhiList )
+        , nl( OS )
+        , write( OS, 'PHI is nontransitive => PASSED' )
+        , nl( OS ), nl( OS )
+	    )
+      )
+    , fail
+    ; close(OS)
+    ).
