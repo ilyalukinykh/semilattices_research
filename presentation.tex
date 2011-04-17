@@ -1,0 +1,535 @@
+\documentclass{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+%\usepackage[usenames,dvipsnames]{color}
+\usepackage{amssymb,amsfonts,amsmath,mathtext}
+\usepackage{cite,enumerate,float,indentfirst}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{amsthm,amscd,amsfonts,amssymb,amsfonts,amsmath,mathtext,cite,enumerate,float} 
+\usepackage{mathtext}
+\usepackage{indentfirst}
+%\usepackage{relsize}
+
+\makeatletter
+\g@addto@macro\@verbatim\small
+\makeatother 
+
+\title {Минимальное частично упорядоченное множество, не являющееся полигоном ни над какой полурешеткой}
+%\title {Компьютерное моделирование полигонов над полурешётками}
+
+\author{Лукиных И.А., Максимовский М.Ю.}
+\date  {апрель 2011}
+
+\newcommand{\green}{\color[rgb]{0,0.4,0}}
+\newcommand{\purple}{\color[rgb]{0.4,0,0.4}}
+\newcommand{\red}{\color[rgb]{0.7,0,0}}
+\newcommand{\blue}{\color{blue}}
+
+\newcommand{\statement}{%
+	 {\bf \green УТВЕРЖДЕНИЕ:\ }}
+\newcommand{\consequence}{%
+     {\bf \green СЛЕДСТВИЕ:\ }}
+\newcommand{\theor}{%
+     {\bf \green ТЕОРЕМА:\ }}
+\newcommand{\suggestion}{%
+     {\bf \green ПРЕДЛОЖЕНИЕ:\ }}
+\newcommand{\definit}{%
+     {\bf \green ОПРЕДЕЛЕНИЕ:\ }}
+\newcommand{\examp}{%
+     {\bf \green ПРИМЕР:\ }}
+\newcommand{\remark}{%
+     {\bf \green ЗАМЕЧАНИЕ:\ }}
+\newcommand{\question}{%
+     {\bf \green ВОПРОС:\ }}
+\newcommand{\goal}{%
+     {\bf \green ЗАДАЧА:\ }}
+
+     
+\newcommand{\retline}{
+
+$ $
+
+}
+
+%\usetheme{Szeged}
+%\usetheme{Singapore}
+\usetheme{default}
+\usecolortheme{rose}
+
+\begin{document}
+
+\lstset{
+	language=Prolog,                        % Code langugage
+	basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, 
+	keywordstyle=\color{blue},              % Keywords font ('*' = uppercase)
+	commentstyle=\color{gray},              % Comments font
+	frame=lines,                            % 
+	tabsize=4,                              % Default tab size
+	numbers=left,
+	numbersep=10pt
+}
+
+%% Титульная страница
+\maketitle
+
+%% Основные тезисы доклада
+%\begin{frame}
+%	\begin{center}
+%	\frametitle{Основные достижения:}
+%		\begin{itemize}
+%		\item использование пространственно-некогерентного света ртутной лампы;
+%		\item применение RAW-конверторов, использование полного динамического диапазона цифровой фотокамеры;
+%		\item усовершенствование линейных алгоримтов деконволюции.
+%		\end{itemize}
+%	\end{center}
+%\end{frame}
+
+\begin{frame}
+{\bf {\blue} Полигон, полурешётка}
+
+{\definit}
+Множество $X$ называется \textit{полигоном над полугруппой} $S$, если
+$\forall X \in X, s \in S$, определено произведение
+$xs \in X$ и выполняется равенство $x(st) = (xs)t$ при $t \in S$.
+{\retline}
+
+{\definit}
+Частично упорядоченное множество $X$ называется \textit{полурешёткой},
+если $\forall a b \in X$ существует $\inf (a, b)$. 
+
+Полурешётка – это то же самое, что коммутативная полугруппа идемпотентов;
+связь между операцией и отношением порядка следующая:
+$a \leq b \iff ab = a$ 
+\end{frame}
+
+\begin{frame}
+{\bf {\blue} Односвязное множество}
+
+{\definit}
+Частично упорядоченное множество $X$ называется \textit{связным},
+если $\forall x,y \in X$ существует последовательность элементов
+$x_0,x_1, ... ,x_n \in X$ такая, что $x_0 = x, x_n = y$ и
+$(x_{i+1} \leq x_i) \lor (x_i \leq x_{i+1})$ при 
+$i = 0,1, ... , n$.
+
+Множество с одной компонентой связности называется \textit{односвязным}.
+
+{\examp}
+
+\begin{center}
+\begin{tikzpicture}[line width=1.0pt]
+  \draw (0,2) node [above left ] {$1$} -- (0,0);
+  \draw (2,2) node [above left ] {$2$} -- (0,0);
+  \draw (4,2) node [above right] {$3$} -- (2,0);
+  \draw (0,0) node [below left ] {$4$} ;
+  \draw (2,0) node [below left ] {$5$} -- (2,2);
+  \draw (4,0) node [below right] {$6$} ;
+  \draw (4,0) -- (4,2);
+  \path[fill=black,draw=white] (0,0) circle (1.5mm);
+  \path[fill=black,draw=white] (2,0) circle (1.5mm);
+  \path[fill=black,draw=white] (4,0) circle (1.5mm);
+  \path[fill=black,draw=white] (0,2) circle (1.5mm);
+  \path[fill=black,draw=white] (2,2) circle (1.5mm);
+  \path[fill=black,draw=white] (4,2) circle (1.5mm);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+{\bf {\blue} Отображения над множествами}
+
+{\definit}
+Для частично упорядоченного множества $X$ обозначим через $\Phi(X)$ множество таких отображений $\alpha : X \rightarrow X$, что
+\begin{itemize}
+\item 
+$\alpha^2 = \alpha$, ($\alpha$ - идемпотентное)
+\item 
+$\forall x,y \in X: x \leq y \implies x\alpha \leq y\alpha$, ($\alpha$ - изотонное)
+\item 
+$\forall x \in X: x\alpha \leq x$, ($\alpha$ - уменьшающее)
+\item 
+$x \leq y, y\alpha = y, \implies x\alpha = x$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+
+{\definit}
+Если $\forall x, y \in X$, где $X$ - частично упорядоченное множество, таких, что $x \leq y$, найдётся отображение $\alpha \in \Phi(X)$ такое, что $x = y\alpha$, то говорят, что $\Phi(X)$ действует на $X$ \textit{транзитивно}.
+{\retline}
+
+{\statement}
+$\Phi$ - полурешётка.
+{\retline}
+
+{\theor}
+Частично упорядоченное множество $X$ является полигоном над полурешёткой тогда и только тогда, когда $\Phi(X)$ действует на $X$ транзитивно.
+\end{frame}
+
+\begin{frame}
+
+{\definit}
+\textit{Нижним конусом} $x^\nabla$ частично упорядоченного множества $X$ называется множество элементов $y \in X$ таких, что $y \leq x$.
+{\retline}
+
+Различные свойства полигонов над полурешётками уже рассмотрены в работе Максимовского М.Ю.
+{\bf {\red} "О полигонах над полурешётками".}
+
+{\retline}
+{\theor}
+Необходимым условием существования для частично упорядоченного множества $X$ такой полурешётки $S$, что $X$ - полигон над $S$, является: $\forall x \in S$ множество $x^\nabla$ должно являться полурешёткой.
+
+{\remark}
+Это условие является необходимым, но не достаточным.
+\end{frame}
+
+
+\begin{frame}
+
+{\examp}
+Частично упорядоченное множество, нижний конус каждого элемента которого является полурешёткой, в то же время это множество не является полигоном ни над какой полурешёткой (иллюстрация \textbf{недостаточности} необходимого условия).
+\begin{center}
+\begin{tikzpicture}[line width=1.0pt]
+  \draw (0,4.5) node [above left ] {$1$} -- (3,1.5);
+  \draw (3,4.5) node [above right] {$2$} -- (0,3);
+  \draw (0,3) node [above left ] {$3$} -- (0,1.5);
+  \draw (3,3) node [above right ] {$4$} -- (0,1.5);
+  \draw (0,1.5) node [above left ] {$5$} -- (1.5,0.5);
+  \draw (3,1.5) node [above right ] {$6$} -- (3,3);
+  \draw (1.5,0.5) node [below right] {$7$} -- (3,1.5);
+  \draw (0,4.5) -- (0,3);
+  \draw (3,4.5) -- (3,3);
+
+  \path[fill=black,draw=white] (0,4.5) circle (1.5mm);
+  \path[fill=black,draw=white] (3,4.5) circle (1.5mm);
+  \path[fill=black,draw=white] (0,3) circle (1.5mm);
+  \path[fill=black,draw=white] (3,3) circle (1.5mm);
+  \path[fill=black,draw=white] (0,1.5) circle (1.5mm);
+  \path[fill=black,draw=white] (3,1.5) circle (1.5mm);
+  \path[fill=black,draw=white] (1.5,0.5) circle (1.5mm);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+
+{\question}
+Найдётся ли другое такое частично упорядоченное множество меньшей мощности, для которого справедливо:
+\begin{enumerate}[(a)]
+	\item
+$\forall x \in X$ нижний конус $x^\nabla$ является полурешёткой;
+	\item
+$\Phi(X)$ действует на $X$ нетранзитивно?
+\end{enumerate}
+{\retline}
+
+{\goal}
+Разработать алгоритм поиска частично упорядоченного множества $X$, удовлетворяющего условиям \textit{(a)} и \textit{(b)}.
+\end{frame}
+
+\begin{frame} 
+{\bf {\blue} Prolog }
+
+{\question} Почему подобные задачи удобно решать с помощью Prolog'а?
+
+\begin{itemize}
+\item
+декларативный язык программирования;
+\item
+логический язык программирования (любые структуры описываются предикатами);
+\item
+механизм поиска с возвратом (backtracking).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf {\blue} Поиск с возвратом }
+
+{\tt
+?- member(X, [1,2,3,4,5]), X mod 2 =:= 0. \\*
+\pause
+X = 2 ; \\*
+\pause
+X = 4 ; \\*
+\pause
+false.
+}
+
+\pause
+{\retline}
+
+{\remark} Здесь и далее используется синтаксис Swi-Prolog
+[\textit{{\bf {\blue http://www.swi-prolog.org/}}}].
+
+Весь исходный код разработанного алгоритма можно найти на
+[\textit{{\bf {\blue http://github/ilukish}}}].
+
+\end{frame}
+
+\begin{frame}
+{\bf {\blue} Алгоритм поиска}
+
+{\bf Шаг 1.}
+Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма;
+\pause
+
+{\bf Шаг 2.}
+Выделение множества $C$ связных графов из множества $P$;
+\pause
+
+{\bf Шаг 3.}
+Выделение множества $S$ частично упорядоченных множества $X$ из множества $P$ таких, что $\forall x \in X$ множество $x^\nabla$ является полурешёткой;
+\pause
+
+{\bf Шаг 4.}
+Формирование $\Phi(S)$ для каждого элемента $s \in S$;
+\pause
+
+{\bf Шаг 5.}
+Выявление таких $s \in S$, на которых $\Phi(s)$  действует нетранзитивно.
+
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 1.}
+
+Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма.
+
+{\scriptsize
+\begin{lstlisting}
+%% relations( -List, +E )  
+relations( List, Elements ) :-
+    findall( [X1,X2]
+           , ( member(X1, Elements)
+             , member(X2, Elements)
+             , X1 < X2
+             )
+           , Relations
+           ),
+	sublist( List, Relations ),
+	active_elements( List, Elements ).
+\end{lstlisting}	
+}
+
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 1.}
+
+Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма.
+{\retline}
+
+{\examp} $N = 3$.
+{\retline}
+{\scriptsize
+\begin{lstlisting}
+?- relations( X, [1,2,3] ).
+X = [[1, 2], [1, 3], [2, 3]] ;
+X = [[1, 2], [1, 3]] ;
+X = [[1, 2], [2, 3]] ;
+X = [[1, 3], [2, 3]] ;
+false.
+\end{lstlisting}
+}
+
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 2.}
+
+Выделение множества $C$ связных графов из множества $P$;
+{\retline}
+
+{\scriptsize
+\begin{lstlisting}
+%% connective_graph( +RelationList, +Elements )
+connective_graph( RelationList, Elements ) :-
+    forall( ( member( X, Elements )
+            , member( Y, Elements )
+            , X < Y
+            )
+          , path( X,Y,RelationList,_ )
+          ).
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 3.}
+
+Выделение множества $S$ частично упорядоченных множества $X$ из множества $P$ таких, что $\forall x \in X$ множество $x^\nabla$ является полурешёткой.
+
+{\tiny
+\begin{lstlisting}
+%% poset_with_semilattices( +RelationList, +E )
+poset_with_semilattices( RelationList, E ) :-
+    forall( member( Element, E )
+          , ( lessList( Element, LessList, RelationList )
+            , findall( [X,Y]
+                     , ( member( [X,Y], RelationList )
+                       , member( X, LessList )
+                       , member( Y, LessList )
+                       )
+                     , LIST
+                     )
+            , sort( LIST, SORTLIST )
+            , ( semilattice( SORTLIST, LessList )
+              ; ( length( SORTLIST, Len )
+                , Len =:= 1
+                )
+              )
+            )
+          ).
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 4.}
+
+Формирование $\Phi(S)$ для каждого элемента $s \in S$;
+{\retline}
+
+{\scriptsize
+\begin{lstlisting}
+%% phi_for_List( +RelationList, +E, -PhiList )
+phi_for_List( RelationList, E, PhiList ) :-
+    findall( Eq
+           , ( get_set( Eq, E, RelationList )
+             , idempotence( Eq )
+             , alpha_isotone( Eq, E, RelationList )
+             , alpha_condition(Eq, E, RelationList)
+             )
+           , PhiList
+           ).
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 4.}
+
+Формирование $\Phi(S)$ для каждого элемента $s \in S$;
+{\retline}
+
+$x \leq y, y\alpha = y, \implies x\alpha = x$
+{\retline}
+
+{\scriptsize
+\begin{lstlisting}
+%% alpha_condition( +Eq, +Elements, +RelationList )
+alpha_condition( Eq, Elements, RelationList ) :-
+    forall( ( member( X, Elements )
+            , member( Y, Elements )
+            , less( Y, X, RelationList )
+            , alpha(Eq, Y, Y)
+            )
+          , alpha( Eq, X, X ) ).
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Шаг 5.}
+
+Выявление таких $s \in S$, на которых $\Phi(s)$  действует нетранзитивно.
+{\retline}
+
+{\scriptsize
+\begin{lstlisting}
+%% transitive( +PhiList, +Elements, +RelationList )
+transitive( PhiList, Elements, RelationList ) :-
+    length( Elements, Length ),
+    forall( ( member( X, Elements )
+            , lessList( X, Cones, RelationList )
+            , member( Cone, Cones )
+            , length( Alpha, Length )
+            , nth1( X, Alpha, Cone )
+            )
+          , member( Alpha, PhiList )
+	).
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+
+{\tiny
+\begin{lstlisting}
+main( N ) :-
+    numlist( 1, N, E ),
+    open( 'log_semi_lattice_phi.txt', write, OS),
+    ( relations( List, E )
+    , connective_graph( List, E )
+    , poset_with_semilattices( List, E )
+    , phi_for_List( List, E, PhiList )
+    , ( ( transitive( PhiList, E, List )
+        , write( OS, ('Poset= ') )
+        , write( OS, List )
+        , nl( OS )
+        , write( OS, ('Phi= ') )
+        , write( OS, PhiList )
+        , nl( OS )
+        , write( OS, 'PHI is transitive => FAILED' )
+        , nl( OS ), nl( OS )
+        )
+      ; ( \+transitive( PhiList, E, List )
+        , write( OS, ('Poset= ') )
+        , write( OS, List )
+        , nl( OS )
+        , write( OS, ('Phi= ') )
+        , write( OS, PhiList )
+        , nl( OS )
+        , write( OS, 'PHI is nontransitive => PASSED' )
+        , nl( OS ), nl( OS )
+        )
+      )
+    , fail
+    ; close(OS)
+    ).
+
+\end{lstlisting}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+{\bf Итог}
+
+{\question}
+Найдётся ли другое такое частично упорядоченное множество меньшей мощности, для которого справедливо:
+\begin{enumerate}[(a)]
+	\item
+$\forall x \in X$ нижний конус $x^\nabla$ является полурешёткой;
+	\item
+$\Phi(X)$ действует на $X$ нетранзитивно?
+\end{enumerate}
+{\retline}
+
+\begin{itemize}
+\item
+$N = 3$: не найдено
+\item
+$N = 4$: не найдено
+\item
+$N = 5$: не найдено
+\item
+$N = 6$: не найдено
+\item
+$N = 7$: ранее полученный пример
+\end{itemize}
+
+{\retline}
+
+{\consequence}
+Таким образом, с помощью компьютерного моделирования доказано, что такого множества не существует.
+
+\end{frame}
+
+
+\end{document}
