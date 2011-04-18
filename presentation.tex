@@ -48,9 +48,11 @@
 \newcommand{\goal}{%
      {\bf \green ЗАДАЧА:\ }}
 
+\newcommand{\ddef}{%
+	{\textit \blue 	}}
      
 \newcommand{\retline}{
-
+	
 $ $
 
 }
@@ -92,31 +94,31 @@ $ $
 {\bf {\blue} Полигон, полурешётка}
 
 {\definit}
-Множество $X$ называется \textit{полигоном над полугруппой} $S$, если
+Множество $X$ называется \textit{\blue{полигоном над полугруппой}} $S$, если
 $\forall X \in X, s \in S$, определено произведение
 $xs \in X$ и выполняется равенство $x(st) = (xs)t$ при $t \in S$.
 {\retline}
 
 {\definit}
-Частично упорядоченное множество $X$ называется \textit{полурешёткой},
+Частично упорядоченное множество $X$ называется \textit{\blue{полурешёткой}},
 если $\forall a b \in X$ существует $\inf (a, b)$. 
+{\retline}
 
-Полурешётка – это то же самое, что коммутативная полугруппа идемпотентов;
-связь между операцией и отношением порядка следующая:
-$a \leq b \iff ab = a$ 
+{\statement}
+Полигон над полурешёткой является частично упорядоченным множеством
 \end{frame}
 
 \begin{frame}
-{\bf {\blue} Односвязное множество}
+{\bf {\blue} Связное частично упорядоченное множество }
 
 {\definit}
-Частично упорядоченное множество $X$ называется \textit{связным},
+Частично упорядоченное множество $X$ называется \textit{\blue{связным}},
 если $\forall x,y \in X$ существует последовательность элементов
 $x_0,x_1, ... ,x_n \in X$ такая, что $x_0 = x, x_n = y$ и
 $(x_{i+1} \leq x_i) \lor (x_i \leq x_{i+1})$ при 
 $i = 0,1, ... , n$.
 
-Множество с одной компонентой связности называется \textit{односвязным}.
+%Множество с одной компонентой связности называется \textit{односвязным}.
 
 {\examp}
 
@@ -140,10 +142,10 @@ $i = 0,1, ... , n$.
 \end{frame}
 
 \begin{frame}
-{\bf {\blue} Отображения над множествами}
+{\bf {\blue} Отображения над частично упорядоченными множествами}
 
 {\definit}
-Для частично упорядоченного множества $X$ обозначим через $\Phi(X)$ множество таких отображений $\alpha : X \rightarrow X$, что
+Для частично упорядоченного множества $X$ обозначим через \textit{\blue{$\Phi(X)$}} множество таких отображений $\alpha : X \rightarrow X$, что:
 \begin{itemize}
 \item 
 $\alpha^2 = \alpha$, ($\alpha$ - идемпотентное)
@@ -159,21 +161,23 @@ $x \leq y, y\alpha = y, \implies x\alpha = x$
 \begin{frame}
 
 {\definit}
-Если $\forall x, y \in X$, где $X$ - частично упорядоченное множество, таких, что $x \leq y$, найдётся отображение $\alpha \in \Phi(X)$ такое, что $x = y\alpha$, то говорят, что $\Phi(X)$ действует на $X$ \textit{транзитивно}.
+Если $\forall x, y \in X$, где $X$ - частично упорядоченное множество, таких, что $x \leq y$, найдётся отображение $\alpha \in \Phi(X)$ такое, что $x = y\alpha$, то говорят, что $\Phi(X)$ действует на $X$ \textit{\blue{транзитивно}}.
 {\retline}
 
-{\statement}
-$\Phi$ - полурешётка.
+%{\statement}
+%$\Phi(X)$ - полурешётка.
+
 {\retline}
 
 {\theor}
+%Необходимое и достаточные условие того, что частично упорядоченное множество является полигоном над некоторой полурешёткой.
 Частично упорядоченное множество $X$ является полигоном над полурешёткой тогда и только тогда, когда $\Phi(X)$ действует на $X$ транзитивно.
 \end{frame}
 
 \begin{frame}
 
 {\definit}
-\textit{Нижним конусом} $x^\nabla$ частично упорядоченного множества $X$ называется множество элементов $y \in X$ таких, что $y \leq x$.
+\textit{\blue{Нижним конусом}} $x^\nabla$ частично упорядоченного множества $X$ называется множество элементов $y \in X$ таких, что $y \leq x$.
 {\retline}
 
 Различные свойства полигонов над полурешётками уже рассмотрены в работе Максимовского М.Ю.
@@ -181,17 +185,18 @@ $\Phi$ - полурешётка.
 
 {\retline}
 {\theor}
-Необходимым условием существования для частично упорядоченного множества $X$ такой полурешётки $S$, что $X$ - полигон над $S$, является: $\forall x \in S$ множество $x^\nabla$ должно являться полурешёткой.
+\textbf{Необходимое} условие того, что частично упорядоченное множество $X$ является полигоном над некоторой полурешеткой: $\forall x \in X$ множество $x^\nabla$ является полурешёткой.
 
+{\retline}
 {\remark}
 Это условие является необходимым, но не достаточным.
 \end{frame}
 
-
 \begin{frame}
 
 {\examp}
-Частично упорядоченное множество, нижний конус каждого элемента которого является полурешёткой, в то же время это множество не является полигоном ни над какой полурешёткой (иллюстрация \textbf{недостаточности} необходимого условия).
+Частично упорядоченное множество, для которого выполняется \textbf{необходимое} условие, но в то же время не являющееся полигоном ни над какой полурешеткой.
+
 \begin{center}
 \begin{tikzpicture}[line width=1.0pt]
   \draw (0,4.5) node [above left ] {$1$} -- (3,1.5);
@@ -229,7 +234,7 @@ $\Phi(X)$ действует на $X$ нетранзитивно?
 {\retline}
 
 {\goal}
-Разработать алгоритм поиска частично упорядоченного множества $X$, удовлетворяющего условиям \textit{(a)} и \textit{(b)}.
+Средствами компьютерного моделирования разработать алгоритм поиска частично упорядоченного множества $X$, удовлетворяющего условиям \textit{(a)} и \textit{(b)}.
 \end{frame}
 
 \begin{frame} 
@@ -264,7 +269,7 @@ false.
 \pause
 {\retline}
 
-{\remark} Здесь и далее используется синтаксис Swi-Prolog
+{\remark} В приведённом примере и тексте программы используется синтаксис Swi-Prolog
 [\textit{{\bf {\blue http://www.swi-prolog.org/}}}].
 
 Весь исходный код разработанного алгоритма можно найти на
@@ -296,207 +301,6 @@ false.
 
 \end{frame}
 
-\begin{frame}[fragile]
-{\bf Шаг 1.}
-
-Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма.
-
-{\scriptsize
-\begin{lstlisting}
-%% relations( -List, +E )  
-relations( List, Elements ) :-
-    findall( [X1,X2]
-           , ( member(X1, Elements)
-             , member(X2, Elements)
-             , X1 < X2
-             )
-           , Relations
-           ),
-	sublist( List, Relations ),
-	active_elements( List, Elements ).
-\end{lstlisting}	
-}
-
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 1.}
-
-Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма.
-{\retline}
-
-{\examp} $N = 3$.
-{\retline}
-{\scriptsize
-\begin{lstlisting}
-?- relations( X, [1,2,3] ).
-X = [[1, 2], [1, 3], [2, 3]] ;
-X = [[1, 2], [1, 3]] ;
-X = [[1, 2], [2, 3]] ;
-X = [[1, 3], [2, 3]] ;
-false.
-\end{lstlisting}
-}
-
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 2.}
-
-Выделение множества $C$ связных графов из множества $P$;
-{\retline}
-
-{\scriptsize
-\begin{lstlisting}
-%% connective_graph( +RelationList, +Elements )
-connective_graph( RelationList, Elements ) :-
-    forall( ( member( X, Elements )
-            , member( Y, Elements )
-            , X < Y
-            )
-          , path( X,Y,RelationList,_ )
-          ).
-\end{lstlisting}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 3.}
-
-Выделение множества $S$ частично упорядоченных множества $X$ из множества $P$ таких, что $\forall x \in X$ множество $x^\nabla$ является полурешёткой.
-
-{\tiny
-\begin{lstlisting}
-%% poset_with_semilattices( +RelationList, +E )
-poset_with_semilattices( RelationList, E ) :-
-    forall( member( Element, E )
-          , ( lessList( Element, LessList, RelationList )
-            , findall( [X,Y]
-                     , ( member( [X,Y], RelationList )
-                       , member( X, LessList )
-                       , member( Y, LessList )
-                       )
-                     , LIST
-                     )
-            , sort( LIST, SORTLIST )
-            , ( semilattice( SORTLIST, LessList )
-              ; ( length( SORTLIST, Len )
-                , Len =:= 1
-                )
-              )
-            )
-          ).
-\end{lstlisting}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 4.}
-
-Формирование $\Phi(S)$ для каждого элемента $s \in S$;
-{\retline}
-
-{\scriptsize
-\begin{lstlisting}
-%% phi_for_List( +RelationList, +E, -PhiList )
-phi_for_List( RelationList, E, PhiList ) :-
-    findall( Eq
-           , ( get_set( Eq, E, RelationList )
-             , idempotence( Eq )
-             , alpha_isotone( Eq, E, RelationList )
-             , alpha_condition(Eq, E, RelationList)
-             )
-           , PhiList
-           ).
-\end{lstlisting}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 4.}
-
-Формирование $\Phi(S)$ для каждого элемента $s \in S$;
-{\retline}
-
-$x \leq y, y\alpha = y, \implies x\alpha = x$
-{\retline}
-
-{\scriptsize
-\begin{lstlisting}
-%% alpha_condition( +Eq, +Elements, +RelationList )
-alpha_condition( Eq, Elements, RelationList ) :-
-    forall( ( member( X, Elements )
-            , member( Y, Elements )
-            , less( Y, X, RelationList )
-            , alpha(Eq, Y, Y)
-            )
-          , alpha( Eq, X, X ) ).
-\end{lstlisting}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-{\bf Шаг 5.}
-
-Выявление таких $s \in S$, на которых $\Phi(s)$  действует нетранзитивно.
-{\retline}
-
-{\scriptsize
-\begin{lstlisting}
-%% transitive( +PhiList, +Elements, +RelationList )
-transitive( PhiList, Elements, RelationList ) :-
-    length( Elements, Length ),
-    forall( ( member( X, Elements )
-            , lessList( X, Cones, RelationList )
-            , member( Cone, Cones )
-            , length( Alpha, Length )
-            , nth1( X, Alpha, Cone )
-            )
-          , member( Alpha, PhiList )
-	).
-\end{lstlisting}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-
-{\tiny
-\begin{lstlisting}
-main( N ) :-
-    numlist( 1, N, E ),
-    open( 'log_semi_lattice_phi.txt', write, OS),
-    ( relations( List, E )
-    , connective_graph( List, E )
-    , poset_with_semilattices( List, E )
-    , phi_for_List( List, E, PhiList )
-    , ( ( transitive( PhiList, E, List )
-        , write( OS, ('Poset= ') )
-        , write( OS, List )
-        , nl( OS )
-        , write( OS, ('Phi= ') )
-        , write( OS, PhiList )
-        , nl( OS )
-        , write( OS, 'PHI is transitive => FAILED' )
-        , nl( OS ), nl( OS )
-        )
-      ; ( \+transitive( PhiList, E, List )
-        , write( OS, ('Poset= ') )
-        , write( OS, List )
-        , nl( OS )
-        , write( OS, ('Phi= ') )
-        , write( OS, PhiList )
-        , nl( OS )
-        , write( OS, 'PHI is nontransitive => PASSED' )
-        , nl( OS ), nl( OS )
-        )
-      )
-    , fail
-    ; close(OS)
-    ).
-
-\end{lstlisting}
-}
-\end{frame}
 
 \begin{frame}[fragile]
 {\bf Итог}
@@ -512,7 +316,7 @@ $\Phi(X)$ действует на $X$ нетранзитивно?
 {\retline}
 
 \begin{itemize}
-\item
+\item2
 $N = 3$: не найдено
 \item
 $N = 4$: не найдено
