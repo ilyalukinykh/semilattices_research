@@ -110,7 +110,12 @@ $x \leq y \iff x \in yS^1 \ \ \forall x,y\in X, s\in S^1$.
 Полигон над полугруппой является алгебраической моделью \textbf{автомата Мура}.
 {\retline}
 
-Элементы множества $X$ можно представить как состояния автомата, элементы множества $S$ - поступающие на вход автомата сигналы.
+\textit{\blue{$(A, Q, f)$}} - автомат Мура, где $A$ - входной алфавит, $Q$ - множество состояний, $f: Q \times A \to Q $ - функция переходов.
+{\retline}
+
+Положим $f(q,a) = qa \ \ \forall q \in Q, a \in A$ и продолжим это действие на элементы из $A^*$, полагая $f(f(...f(f(q,a_1), a_2),...)a_n) = q a_1 a_2 ... a_n.$ 
+{\retline}
+Тогда \textit{\blue{$Q$}} - правый полигон над свободной полугруппой \textit{\blue{$A^*$}}.
 
 \end{frame}
 
@@ -124,7 +129,7 @@ $x_0,x_1, ... ,x_n \in X$ такая, что $x_0 = x, x_n = y$ и
 $(x_{i+1} \leq x_i) \lor (x_i \leq x_{i+1})$ при 
 $i = 0,1, ... , n$.
 
-%Множество с одной компонентой связности называется \textit{односвязным}.
+{\retline}
 
 {\examp}
 
@@ -191,7 +196,7 @@ $x \leq y, y\alpha = y \implies x\alpha = x$
 
 {\retline}
 {\theor}
-\textbf{Необходимое} условие того, что частично упорядоченное множество $X$ является полигоном над некоторой полурешеткой: $\forall x \in X$ множество $x^\nabla$ является полурешёткой.
+\textbf{Необходимое} условие того, что частично упорядоченное множество $X$ является полигоном над некоторой полурешёткой: $\forall x \in X$ множество $x^\nabla$ является полурешёткой.
 
 {\retline}
 {\remark}
@@ -260,6 +265,25 @@ $\Phi(X)$ действует на $X$ нетранзитивно?
 \end{frame}
 
 \begin{frame}[fragile]
+
+{\examp}
+Проверка графа на односвязность.
+{\retline}
+
+\begin{lstlisting}
+%% connective_graph( +RelationList, +Elements )
+connective_graph( RelationList, Elements ) :-
+    forall( ( member( X, Elements )
+            , member( Y, Elements )
+            , X < Y
+            )
+          , path( X,Y,RelationList,_ )
+          ).
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
 {\bf {\blue} Поиск с возвратом }
 
 {\tt
@@ -287,19 +311,19 @@ false.
 {\bf {\blue} Алгоритм поиска}
 
 {\bf Шаг 1.}
-Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма;
+Формирование множества $P$ всех частично упорядоченных множеств заданной мощности $N$ с точностью до изоморфизма; ($|P_{N=6}|=$ {\blue 27449})
 \pause
 
 {\bf Шаг 2.}
-Выделение множества $C$ связных графов из множества $P$;
+Выделение множества $C$ связных графов из множества $P$; ($|C_{N=6}|=$ {\blue 26704})
 \pause
 
 {\bf Шаг 3.}
-Выделение множества $S$ частично упорядоченных множества $X$ из множества $P$ таких, что $\forall x \in X$ множество $x^\nabla$ является полурешёткой;
+Выделение множества $S$ таких частично упорядоченных множеств $X$ из множества $P$, что $\forall x \in X$ множество $x^\nabla$ является полурешёткой;  ($|S_{N=6}|=$ {\blue 9733})
 \pause
 
 {\bf Шаг 4.}
-Формирование $\Phi(S)$ для каждого элемента $s \in S$;
+Формирование $\Phi(s)$ для каждого элемента $s \in S$;
 \pause
 
 {\bf Шаг 5.}
@@ -333,7 +357,54 @@ $N = 6$: не найдено
 \item
 $N = 7$: ранее полученный пример
 \end{itemize}
+\end{frame}
 
+\begin{frame}
+{\examp}
+
+
+\begin{center}
+\begin{tikzpicture}[line width=1.0pt]
+  \draw (0,3) node [above left ] {$1$} -- (2,1);
+  \draw (2,3) node [above right] {$2$} -- (0,2);
+  \draw (0,2) node [above left ] {$3$} -- (0,1);
+  \draw (2,2) node [above right ] {$4$} -- (0,1);
+  \draw (0,1) node [above left ] {$5$} -- (1,0);
+  \draw (2,1) node [above right ] {$6$} -- (2,2);
+  \draw (1,0) node [below right] {$7$} -- (2,1);
+  \draw (0,3) -- (0,2);
+  \draw (2,3) -- (2,2);
+
+  \path[fill=black,draw=white] (0,3) circle (1.5mm);
+  \path[fill=black,draw=white] (2,3) circle (1.5mm);
+  \path[fill=black,draw=white] (0,2) circle (1.5mm);
+  \path[fill=black,draw=white] (2,2) circle (1.5mm);
+  \path[fill=black,draw=white] (0,1) circle (1.5mm);
+  \path[fill=black,draw=white] (2,1) circle (1.5mm);
+  \path[fill=black,draw=white] (1,0) circle (1.5mm);
+\end{tikzpicture}
+\end{center}
+$\Phi(X)= \{$
+{\tt
+[1,2,3,4,5,6,7],
+[3,3,3,5,5,7,7],
+[5,5,5,5,5,7,7],
+[6,6,7,6,7,6,7],
+[7,7,7,7,7,7,7] }$\}$
+
+\end{frame}
+
+\begin{frame}
+{\bf Итог}
+
+{\question}
+Найдётся ли другое такое частично упорядоченное множество меньшей мощности, для которого справедливо:
+\begin{enumerate}[(a)]
+	\item
+$\forall x \in X$ нижний конус $x^\nabla$ является полурешёткой;
+	\item
+$\Phi(X)$ действует на $X$ нетранзитивно?
+\end{enumerate}
 {\retline}
 
 {\consequence}
